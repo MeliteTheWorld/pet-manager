@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pet Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="app-shell">
+        <header class="hero">
+            <h1>PET MANAGER</h1>
+        </header>
+        <main class="workspace" aria-live="polite">
+            <section class="section action-section" aria-label="Основные действия">
+                <div class="action-row">
+                    <button class="button" id="addButton" type="button">
+                        Добавить
+                    </button>
+                    <button class="button" id="refreshButton" type="button">
+                        Обновить
+                    </button>
+                </div>
+            </section>
+            <section class="section utility-section" aria-labelledby="filters-title">
+                <div class="section-header">
+                    <h2 id="filters-title">ФИЛЬТР</h2>
+                </div>
+                <form class="filter-form" id="filterForm">
+                    <fieldset class="filter-group">
+                        <legend class="sr-only">Статус</legend>
+                        <label class="radio-pill">
+                <input type="radio" name="statusFilter" value="all" checked />
+                <span>Все</span>
+              </label>
+                        <label class="radio-pill">
+                    <input
+                    type="radio"
+                    name="statusFilter"
+                    value="available"
+                    />
+                <span>Available</span>
+              </label>
+                        <label class="radio-pill">
+                <input type="radio" name="statusFilter" value="pending" />
+                <span>Pending</span>
+              </label>
+                        <label class="radio-pill">
+                <input type="radio" name="statusFilter" value="sold" />
+                <span>Sold</span>
+              </label>
+                    </fieldset>
+                </form>
+                <form class="search-form" id="searchForm">
+                    <label class="input-wrap input-wrap-inline" for="searchInput">
+                    <span class="input-label">ПОИСК</span>
+                    <input
+                        id="searchInput"
+                        name="search"
+                        type="search"
+                        placeholder="Введите имя питомца"
+                        autocomplete="off"
+                    />
+            </label>
+                    <button class="button button-primary" type="submit">
+                        Найти
+                    </button>
+                </form>
+            </section>
+            <section class="section editor-section" aria-labelledby="editor-title">
+                <div class="section-header">
+                    <h2 id="editor-title">ФОРМА</h2>
+                    <p id="formModeLabel">Добавление / редактирование питомца.</p>
+                </div>
+                <form id="petForm" class="pet-form" novalidate>
+                    <div class="form-grid">
+                        <label class="form-row" for="nameInput">
+                <span class="input-label">Имя</span>
+                    <input
+                        id="nameInput"
+                        name="name"
+                        type="text"
+                        maxlength="50"
+                        required
+                        placeholder="Имя питомца"
+                    />
+              </label>
+                        <label class="form-row" for="statusInput">
+                <span class="input-label">Статус</span>
+                <select id="statusInput" name="status">
+                  <option value="available">Available</option>
+                  <option value="pending">Pending</option>
+                  <option value="sold">Sold</option>
+                </select>
+              </label>
+                        <label class="form-row" for="photoInput">
+                <span class="input-label">URL фото</span>
+                <input
+                  id="photoInput"
+                  name="photo"
+                  type="url"
+                  placeholder="https://example.com/pet.jpg"
+                />
+              </label>
+                        <label class="form-row" for="categoryInput">
+                <span class="input-label">Категория</span>
+                        <input
+                        id="categoryInput"
+                        name="category"
+                        type="text"
+                        maxlength="50"
+                        placeholder="Категория"
+                        />
+              </label>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="button button-primary" id="saveButton" type="submit">
+                Сохранить
+              </button>
+                        <button class="button button-danger is-hidden" id="deleteButton" type="button">
+                Удалить
+              </button>
+                    </div>
+                </form>
+            </section>
+            <section class="section content-section" aria-labelledby="pets-title">
+                <div class="section-header">
+                    <div>
+                        <h2 id="pets-title">СПИСОК ПИТОМЦЕВ</h2>
+                        <p id="resultsMeta">Загрузка питомцев...</p>
+                    </div>
+                </div>
+                <div class="empty-state is-hidden" id="emptyState">
+                    <h3>Питомцы не найдены</h3>
+                    <p>Попробуйте другой фильтр или добавьте новую запись.</p>
+                </div>
+                <div class="pet-grid" id="petGrid"></div>
+            </section>
+        </main>
+    </div>
+    <div class="loader-overlay is-hidden" id="loaderOverlay" aria-hidden="true">
+        <div class="loader-card" role="status" aria-label="Loading">
+            <span class="spinner"></span>
+            <span>Loading</span>
+        </div>
+    </div>
+    <div class="toast-stack" id="toastStack" aria-live="assertive"></div>
+</body>
+<script src="script.js" defer></script>
+
+</html>
