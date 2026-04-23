@@ -119,7 +119,11 @@ function normalizePet(pet) {
     }
   }
 
-  if (pet.category) {
+  if (typeof pet.category === "string") {
+    if (pet.category.trim() !== "") {
+      categoryName = pet.category.trim();
+    }
+  } else if (pet.category) {
     if (!isNaN(Number(pet.category.id))) {
       categoryId = Number(pet.category.id);
     }
@@ -138,11 +142,51 @@ function normalizePet(pet) {
     name: typeof pet.name === "string" && pet.name.trim() !== "" ? pet.name.trim() : "Untitled pet",
     status: typeof pet.status === "string" && pet.status.trim() !== "" ? pet.status.trim().toLowerCase() : "available",
     photoUrls: photoUrls,
-    image: firstPhoto,
-    categoryId: categoryId,
+    image: firstPhoto || pet.image || "",
+    categoryId: categoryId || pet.categoryId || null,
     category: categoryName,
     tags: tags
   };
+}
+
+function fillPetFromPayload(savedPet, payload) {
+  let result = {};
+  let i;
+  let keys;
+
+  if (savedPet) {
+    keys = Object.keys(savedPet);
+
+    for (i = 0; i < keys.length; i += 1) {
+      result[keys[i]] = savedPet[keys[i]];
+    }
+  }
+
+  if (!result.category && payload.category) {
+    result.category = payload.category;
+  }
+
+  if ((!result.photoUrls || result.photoUrls.length === 0) && payload.photoUrls) {
+    result.photoUrls = payload.photoUrls;
+  }
+
+  if (!result.name && payload.name) {
+    result.name = payload.name;
+  }
+
+  if (!result.status && payload.status) {
+    result.status = payload.status;
+  }
+
+  if (!result.id && payload.id) {
+    result.id = payload.id;
+  }
+
+  if (!result.tags && payload.tags) {
+    result.tags = payload.tags;
+  }
+
+  return result;
 }
 
 async function request(path, options) {
@@ -257,7 +301,7 @@ const api = {
     });
 
     if (createdPet) {
-      return normalizePet(createdPet);
+      return normalizePet(fillPetFromPayload(createdPet, payload));
     }
 
     return normalizePet(payload);
@@ -270,7 +314,7 @@ const api = {
     });
 
     if (updatedPet) {
-      return normalizePet(updatedPet);
+      return normalizePet(fillPetFromPayload(updatedPet, payload));
     }
 
     return normalizePet(payload);
